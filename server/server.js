@@ -14,6 +14,14 @@ router.get('/products', async (req,res) => {
     res.end()
 })
 
+router.get('/products/:category', async (req, res) => {
+    const category = req.params.category
+    const productsByCategory = await Product.find({category: category})
+
+    res.json(productsByCategory)
+    res.end()
+})
+
 mongoose.connect('mongodb://localhost:27017/TheCulinaryHaven')
     .then(() => console.log('Db connected'))
     .catch(error => console.log(error))
