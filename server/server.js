@@ -30,6 +30,15 @@ router.post('/products/create', async (req, res) => {
     res.end()
 })
 
+router.post('/products/edit/:id', async (req,res) => {
+    const productId = req.params.id
+    const newProductData = req.body
+    const editedProduct = await Product.findByIdAndUpdate(productId, newProductData, { new: true })
+
+    res.send(editedProduct)
+    res.end()
+})
+
 mongoose.connect('mongodb://localhost:27017/TheCulinaryHaven')
     .then(() => console.log('Db connected'))
     .catch(error => console.log(error))
