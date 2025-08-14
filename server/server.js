@@ -14,6 +14,14 @@ router.get('/products', async (req,res) => {
     res.end()
 })
 
+router.get('/products/:id', async (req, res) => {
+    const productId = req.params.id
+    const productData = await Product.findById(productId)
+
+    res.send(productData)
+    res.end()
+})
+
 router.get('/products/:category', async (req, res) => {
     const category = req.params.category
     const productsByCategory = await Product.find({category: category})
