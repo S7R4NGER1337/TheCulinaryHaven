@@ -10,7 +10,7 @@ app.use(express.json())
 router.get('/products', async (req,res) => {
     const allProducts = await Product.find()
     
-    res.json(allProducts)
+    res.send(allProducts)
     res.end()
 })
 
