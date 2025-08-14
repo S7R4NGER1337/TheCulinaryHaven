@@ -22,6 +22,14 @@ router.get('/products/:category', async (req, res) => {
     res.end()
 })
 
+router.post('/products/create', async (req, res) => {
+    const data = req.body
+    const createdProduct = await Product.create(data)
+
+    res.send(createdProduct)
+    res.end()
+})
+
 mongoose.connect('mongodb://localhost:27017/TheCulinaryHaven')
     .then(() => console.log('Db connected'))
     .catch(error => console.log(error))
