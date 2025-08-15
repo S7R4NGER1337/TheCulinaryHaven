@@ -3,6 +3,7 @@ const app = express()
 const router = express.Router()
 const mongoose = require('mongoose')
 const Product = require('./models/Product')
+require('dotenv').config()
 
 app.use(express.urlencoded())
 app.use(express.json())
@@ -32,9 +33,16 @@ router.get('/products/:category', async (req, res) => {
 
 router.post('/products/create', async (req, res) => {
     const data = req.body
-    const createdProduct = await Product.create(data)
+    const authToken = req.headers.authorization //TODO fix this
+    const adminToken = process.env.ADMIN_AUTHTOKEN
 
-    res.send(createdProduct)
+    if(authToken === adminToken){
+        const createdProduct = await Product.create(data)
+        res.send(createdProduct)
+    } else {
+        res.send('You need to be an admin')
+    }
+    
     res.end()
 })
 
