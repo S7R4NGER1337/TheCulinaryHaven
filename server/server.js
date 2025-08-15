@@ -8,9 +8,9 @@ require('dotenv').config()
 app.use(express.urlencoded())
 app.use(express.json())
 
-router.get('/products', async (req,res) => {
+router.get('/products', async (req, res) => {
     const allProducts = await Product.find()
-    
+
     res.send(allProducts)
     res.end()
 })
@@ -25,7 +25,7 @@ router.get('/products/:id', async (req, res) => {
 
 router.get('/products/:category', async (req, res) => {
     const category = req.params.category
-    const productsByCategory = await Product.find({category: category})
+    const productsByCategory = await Product.find({ category: category })
 
     res.json(productsByCategory)
     res.end()
@@ -36,7 +36,7 @@ router.post('/products/create', async (req, res) => {
     const authToken = req.headers.authorization
     const adminToken = process.env.ADMIN_AUTHTOKEN
 
-    if(authToken === adminToken){
+    if (authToken === adminToken) {
         const createdProduct = await Product.create(data)
         res.send(createdProduct)
     } else {
@@ -46,12 +46,19 @@ router.post('/products/create', async (req, res) => {
     res.end()
 })
 
-router.post('/products/edit/:id', async (req,res) => {
+router.post('/products/edit/:id', async (req, res) => {
     const productId = req.params.id
     const newProductData = req.body
-    const editedProduct = await Product.findByIdAndUpdate(productId, newProductData, { new: true })
+    const authToken = req.headers.authorization
+    const adminToken = process.env.ADMIN_AUTHTOKEN
 
-    res.send(editedProduct)
+    if (authToken === adminToken) {
+        const editedProduct = await Product.findByIdAndUpdate(productId, newProductData, { new: true })
+        res.send(editedProduct)
+    } else {
+        res.send('You need to be an admin')
+    }
+
     res.end()
 })
 
@@ -61,12 +68,12 @@ router.post('/admin/login', async (req, res) => {
     const adminUsername = process.env.ADMIN_USERNAME
     const data = req.body
 
-    if(data.userName === adminUsername && data.password === adminPassword){
+    if (data.userName === adminUsername && data.password === adminPassword) {
         res.send(adminToken)
     } else {
         res.send('no')
     }
-    
+
     res.end()
 })
 
