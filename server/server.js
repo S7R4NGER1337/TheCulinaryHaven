@@ -33,7 +33,7 @@ router.get('/products/:category', async (req, res) => {
 
 router.post('/products/create', async (req, res) => {
     const data = req.body
-    const authToken = req.headers.authorization //TODO fix this
+    const authToken = req.headers.authorization
     const adminToken = process.env.ADMIN_AUTHTOKEN
 
     if(authToken === adminToken){
@@ -42,7 +42,7 @@ router.post('/products/create', async (req, res) => {
     } else {
         res.send('You need to be an admin')
     }
-    
+
     res.end()
 })
 
@@ -52,6 +52,21 @@ router.post('/products/edit/:id', async (req,res) => {
     const editedProduct = await Product.findByIdAndUpdate(productId, newProductData, { new: true })
 
     res.send(editedProduct)
+    res.end()
+})
+
+router.post('/admin/login', async (req, res) => {
+    const adminToken = process.env.ADMIN_AUTHTOKEN
+    const adminPassword = process.env.ADMIN_PASSWORD
+    const adminUsername = process.env.ADMIN_USERNAME
+    const data = req.body
+
+    if(data.userName === adminUsername && data.password === adminPassword){
+        res.send(adminToken)
+    } else {
+        res.send('no')
+    }
+    
     res.end()
 })
 
