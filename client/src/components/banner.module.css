@@ -1,0 +1,50 @@
+.bannerContainer{
+    max-width: 65rem;
+    position: relative;
+}
+
+.bannerImage{
+    width: 100%;
+    object-fit: contain;
+    display: block;
+    filter: brightness(0.8);
+}
+
+.bannerInfo{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+}
+
+.bannerButton{
+    margin-top: 5rem;
+    font-size: 1.1rem;
+    padding: 0.8rem 2rem;
+    border-radius: 0.5rem;
+    border: none;
+    color: white;
+    background-color: #EB2933;
+}
+
+.bannerName{
+    font-size: 3.2rem;
+    font-weight: 800;
+}
+
+.bannerDescription{
+    font-size: 1.1rem;
+}
+
+.bannerButton:hover{
+    cursor: pointer;
+    box-shadow: 0rem 0rem 1rem 0.1rem #EB2933;
+    transform: scale(1.1);
+}
