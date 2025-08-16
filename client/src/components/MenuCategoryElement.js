@@ -1,11 +1,11 @@
 import styles from "./MenuCatagoryElement.module.css"
 
-export default function MenuCatagoryElement(params) {
+export default function MenuCatagoryElement({onClickCategory, type}) {
     
     return(
-        <div className={styles.menuCategoryElementContainer}>
-            <img src={`/${params.type}.jpg`} alt={params.type} className={styles.catagoryImage}/>
-            <p className={styles.catrgoryName}>{params.type}</p>
+        <div className={styles.menuCategoryElementContainer} onClick={() => onClickCategory(type)}>
+            <img src={`/${type}.jpg`} alt={type} className={styles.catagoryImage}/>
+            <p className={styles.catrgoryName}>{type}</p>
         </div>
     )
 }
