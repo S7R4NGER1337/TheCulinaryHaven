@@ -1,0 +1,24 @@
+.catagoryImage{
+    aspect-ratio: 1/1;
+    max-width: 3rem;
+    border-radius: 0.7rem;
+}
+
+.menuCategoryElementContainer{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 15rem;
+    height: 10rem;
+    gap: 1rem
+}
+
+.catrgoryName{
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.menuCategoryElementContainer:hover{
+    cursor: pointer;
+}
