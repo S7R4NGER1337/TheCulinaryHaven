@@ -1,6 +1,7 @@
 .bannerContainer{
     max-width: 65rem;
     position: relative;
+    border-radius: 1em;
 }
 
 .bannerImage{
@@ -8,6 +9,7 @@
     object-fit: contain;
     display: block;
     filter: brightness(0.8);
+    border-radius: 1em;
 }
 
 .bannerInfo{
