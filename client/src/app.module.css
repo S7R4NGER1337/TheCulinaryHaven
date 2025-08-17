@@ -23,3 +23,10 @@
 .aboutUsHeading{
     margin-top: 2rem;
 }
+
+.footer{
+    margin-top: 5rem;
+    padding: 1em;
+    font-weight: 300;
+    text-align: center;
+}

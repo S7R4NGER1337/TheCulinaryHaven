@@ -17,6 +17,7 @@ function App() {
       <h1 className={styles.aboutUsHeading}>AboutUs</h1>
       <AboutUs />
     </div>
+    <p className={styles.footer}>© 2025 The Culinary Haven. All rights reserved</p>
   </>
   );
 }
