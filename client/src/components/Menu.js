@@ -11,12 +11,12 @@ export default function Menu() {
     useEffect(() => {
         try {
             async function getProducts() {
-                
+
                 const response = await fetch(`http://localhost:3030/products/category/${selectedCategory}`)
                 const products = await response.json()
-                
+
                 console.log(products);
-                setProducts(products);              
+                setProducts(products);
             }
             getProducts()
         } catch (error) {
@@ -41,8 +41,10 @@ export default function Menu() {
             {categories.map(category => <MenuCatagoryElement type={category} onClickCategory={onClickCategory} />)}
         </div>
         <h1 className={styles.selectedCategoryName}>{selectedCategory}</h1>
-        {products.map(((product) => (
-            <ProductCard key={product.id} productData={product}/>
-        )))}
+        <div className={styles.productsContainer}>
+            {products.map(((product) => (
+                <ProductCard key={product.id} productData={product} />
+            )))}
+        </div>
     </div>
 }
