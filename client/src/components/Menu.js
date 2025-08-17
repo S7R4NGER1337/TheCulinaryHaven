@@ -38,7 +38,7 @@ export default function Menu() {
     return <div className={styles.menuContainer}>
         <h1 className={styles.menuHeading}>Menu Catagories</h1>
         <div className={styles.categoriesContainer}>
-            {categories.map(category => <MenuCatagoryElement type={category} onClickCategory={onClickCategory} />)}
+            {categories.map(category => <MenuCatagoryElement type={category} onClickCategory={onClickCategory} selectedCategory={selectedCategory}/>)}
         </div>
         <h1 className={styles.selectedCategoryName}>{selectedCategory}</h1>
         <div className={styles.productsContainer}>

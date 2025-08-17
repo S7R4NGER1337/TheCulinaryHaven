@@ -23,3 +23,9 @@
     transform: scale(1.2);
     cursor: pointer;
 }
+
+.line{
+    height: 0.1em;
+    background-color: #EB2933;
+    width: 100%;
+}
