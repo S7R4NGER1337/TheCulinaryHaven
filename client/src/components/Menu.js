@@ -27,7 +27,7 @@ export default function Menu() {
     const categories = [
         'Appetizers',
         'MainCourses',
-        'Deserts',
+        'Desserts',
         'Drinks'
     ]
 
