@@ -3,7 +3,6 @@ import styles from "./MenuCatagoryElement.module.css"
 export default function MenuCatagoryElement({onClickCategory, type, selectedCategory}) {
     
     const isSelected = type === selectedCategory
-    console.log(isSelected);
     
     return(
         <div className={styles.menuCategoryElementContainer} onClick={() => onClickCategory(type)}>

@@ -15,7 +15,6 @@ export default function Menu() {
                 const response = await fetch(`http://localhost:3030/products/category/${selectedCategory}`)
                 const products = await response.json()
 
-                console.log(products);
                 setProducts(products);
             }
             getProducts()
