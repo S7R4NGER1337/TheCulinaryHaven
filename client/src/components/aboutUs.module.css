@@ -1,0 +1,31 @@
+.googleMap{
+    height: 15vw;
+    width: 20vw;
+}
+
+.aboutUsContainer{
+    align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    h1{
+        font-size: 1.5rem;
+    }
+    p{
+        font-size: 0.9rem;
+    }
+}
+
+.restaurantInfo{
+    display: flex;
+    flex-direction: column;
+}
+.restaurantLocation{
+    margin-bottom: 2rem;
+}
+
+.workingHours{
+    h1{
+        padding-bottom: 2rem;
+    }
+}
