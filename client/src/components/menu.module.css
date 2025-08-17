@@ -19,3 +19,7 @@
     flex-direction: column;
     gap: 2rem;
 }
+
+.selectedCategoryName{
+    margin-bottom: 2rem;
+}
