@@ -1,0 +1,40 @@
+
+.products{
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 60rem;
+}
+
+.selectedCategoryName{
+    font-size: 1.7rem;
+}
+
+.productName{
+    font-size: 1.5rem;
+}
+
+.productDescription{
+    max-width: 40rem;
+    font-size: 1rem;
+    color: rgb(80, 80, 80);
+}
+
+.productImage{
+    aspect-ratio: 1/1;
+    width: 13rem;
+    height: 13rem;
+    border-radius: 0.5em;
+}
+
+.productPrice{
+    font-weight: 600;
+    margin-top: 1rem;
+    font-size: 1.2rem;
+}
+
+.productInfo{
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+}
