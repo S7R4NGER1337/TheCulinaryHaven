@@ -1,24 +1,66 @@
-.navContainer{
+.navContainer {
     display: flex;
     align-items: center;
-    justify-content:space-between;
+    justify-content: space-between;
     margin: 1rem 5rem 1rem 5rem
 }
 
-.navLinks{
+.navLinks {
     display: flex;
     font-size: 1rem;
     font-weight: 500;
     gap: 2rem;
 }
 
-.navHeading{
+.navHeading {
     font-size: 1.2rem;
 }
 
-.navLink:hover{
+.navLink:hover {
     cursor: pointer;
 }
-.navHeading:hover{
+
+.navHeading:hover {
     cursor: pointer;
+}
+
+.mobileNav {
+    display: none;
+    justify-content: center;
+    
+}
+
+@media only screen and (max-width: 700px) {
+    .navLinks {
+        display: none;
+    }
+
+    .mobileNav {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .navHeading {
+        font-size: 1rem;
+        align-self: center;
+        justify-self: start;
+    }
+
+    .navContainer {
+        justify-content: space-around;
+        margin: 1rem 5rem 1rem 3rem
+    }
+
+    .mobileNavLink{
+        font-size: 1.5rem;
+        padding: 1em;
+        text-align: center;
+        font-weight: 400;
+    }
+
+    .mobileNavIcon{
+        width: 2rem;
+        align-self: flex-end;
+    }
 }
