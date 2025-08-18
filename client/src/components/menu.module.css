@@ -1,6 +1,6 @@
 .categoriesContainer{
     display: flex;
-    gap: 13vw
+    justify-content: space-around;
 }
 
 .menuContainer{
