@@ -1,0 +1,31 @@
+.productImage{
+    aspect-ratio: 1/1;
+    max-width: 100%;
+}
+
+.productName{
+    font-size: 1.5rem;
+}
+
+.productContainer{
+    max-width: 15rem;
+    padding: 1rem;
+    border: 0.1em solid #dfdfdf;
+    border-radius: 0.3em;
+}
+
+.productDescription{
+    font-size: 0.8rem;
+    color: gray;
+}
+
+.productPrice{
+    font-size: 1rem;
+    font-weight: 500;
+}
+.productInformation{
+    display: flex;
+    flex-direction: column;
+    gap: 0.8rem;
+    text-align: center;
+}

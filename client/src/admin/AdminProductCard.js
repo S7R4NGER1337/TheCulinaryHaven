@@ -1,13 +1,15 @@
 import styles from './adminProductCard.module.css'
 
-export default function AdminProductCard({productData}){
+export default function AdminProductCard({ productData }) {
 
-    return(
+    return (
         <div className={styles.productContainer}>
-            <img src={productData.image} alt='productImage'/>
-            <h1>{productData.name}</h1>
-            <p>{productData.description}</p>
-            <p>{productData.price}</p>
+            <img className={styles.productImage} src={productData.image} alt='productImage' />
+            <div className={styles.productInformation}>
+                <h1 className={styles.productName}>{productData.name}</h1>
+                <p className={styles.productDescription}>{productData.description}</p>
+                <p className={styles.productPrice}>${productData.price}</p>
+            </div>
         </div>
     )
 }
