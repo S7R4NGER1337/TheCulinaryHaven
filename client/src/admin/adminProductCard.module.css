@@ -1,6 +1,7 @@
 .productImage{
     aspect-ratio: 1/1;
     max-width: 100%;
+    border-radius: 0.3em;
 }
 
 .productName{
@@ -12,6 +13,9 @@
     padding: 1rem;
     border: 0.1em solid #dfdfdf;
     border-radius: 0.3em;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 }
 
 .productDescription{
@@ -26,6 +30,8 @@
 .productInformation{
     display: flex;
     flex-direction: column;
+    justify-content: space-between;
+    align-items: center;
     gap: 0.8rem;
     text-align: center;
 }
