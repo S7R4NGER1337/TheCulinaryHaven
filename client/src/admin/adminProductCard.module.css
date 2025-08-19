@@ -1,14 +1,14 @@
-.productImage{
+.productImage {
     aspect-ratio: 1/1;
     max-width: 100%;
     border-radius: 0.3em;
 }
 
-.productName{
+.productName {
     font-size: 1.5rem;
 }
 
-.productContainer{
+.productContainer {
     max-width: 15rem;
     padding: 1rem;
     border: 0.1em solid #dfdfdf;
@@ -18,20 +18,49 @@
     justify-content: space-between;
 }
 
-.productDescription{
+.productDescription {
     font-size: 0.8rem;
     color: gray;
 }
 
-.productPrice{
+.productPrice {
     font-size: 1rem;
     font-weight: 500;
 }
-.productInformation{
+
+.productInformation {
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     align-items: center;
     gap: 0.8rem;
     text-align: center;
+}
+
+.adminButton {
+    padding: 0.4em 0.7em;
+    width: 50%;
+    color: white;
+    border: none;
+    font-size: 1rem;
+    font-weight: 600;
+}
+
+.adminButtons {
+    margin-top: 1rem;
+    display: flex;
+    gap: 0.3rem;
+}
+
+.adminButton:hover {
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.adminDelete {
+    background-color: red;
+}
+
+.adminEdit {
+    background-color: rgb(0, 106, 255);
 }

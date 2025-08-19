@@ -10,6 +10,10 @@ export default function AdminProductCard({ productData }) {
                 <p className={styles.productDescription}>{productData.description}</p>
                 <p className={styles.productPrice}>${productData.price}</p>
             </div>
+            <div className={styles.adminButtons}>
+                <button className={`${styles.adminEdit} ${styles.adminButton}`}>Edit</button>
+                <button className={`${styles.adminDelete} ${styles.adminButton}`}>Delete</button>
+            </div>
         </div>
     )
 }
