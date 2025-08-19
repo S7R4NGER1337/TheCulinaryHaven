@@ -15,9 +15,10 @@ export default function Admin() {
         getAllProducts()
     }, [])
 
-    console.log(products);
-    
-    return <div className={styles.productsContainer}>
-        {products.map(product => <AdminProductCard productData={product}/>)}
-    </div>
+
+    return <>
+        <div className={styles.productsContainer}>
+            {products.map(product => <AdminProductCard productData={product} key={product.id}/>)}
+        </div>
+    </>
 }
