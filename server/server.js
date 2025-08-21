@@ -94,9 +94,9 @@ router.post('/admin/login', async (req, res) => {
     const data = req.body
 
     if (data.userName === adminUsername && data.password === adminPassword) {
-        res.send(adminToken)
+        res.send({adminToken: adminToken})
     } else {
-        res.send('no')
+        res.send({adminToken: 'no'})
     }
 
     res.end()
