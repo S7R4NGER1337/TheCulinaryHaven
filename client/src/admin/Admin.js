@@ -22,10 +22,10 @@ export default function Admin() {
     }, [])
 
     const Loader = () => (
-        <Box sx={{ width: '90rem', margin: '3rem'}}>
-            <Skeleton animation="wave" sx={{height: '6rem'}}/>
-            <Skeleton animation="wave" sx={{height: '6rem'}}/>
-            <Skeleton animation="wave" sx={{height: '6rem'}}/>
+        <Box sx={{ width: '90rem', margin: '3rem' }}>
+            <Skeleton animation="wave" sx={{ height: '6rem' }} />
+            <Skeleton animation="wave" sx={{ height: '6rem' }} />
+            <Skeleton animation="wave" sx={{ height: '6rem' }} />
         </Box>
     )
 
@@ -41,10 +41,13 @@ export default function Admin() {
         setProducts(prevProducts => prevProducts.filter(product => product._id !== id))
     }
     return (<>
-        <h1 className={styles.goBack} onClick={() => navigate('/')}>Back to the app</h1>
+        <div className={styles.adminLinks}>
+            <h1 className={styles.goBack} onClick={() => navigate('/')}>Back to the app</h1>
+            <h1 className={styles.goBack} onClick={() => navigate('/admin/create')}>Create new product</h1>
+        </div>
         {loadStatus ? <Loader /> : <>
             <div className={styles.productsContainer}>
-                {products.map(product => <AdminProductCard productData={product} key={product} deleteProduct={deleteProduct}/>)}
+                {products.map(product => <AdminProductCard productData={product} key={product} deleteProduct={deleteProduct} />)}
             </div>
         </>}
     </>)

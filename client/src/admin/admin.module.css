@@ -13,3 +13,9 @@
 .goBack:hover{
     cursor: pointer;
 }
+
+.adminLinks{
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
