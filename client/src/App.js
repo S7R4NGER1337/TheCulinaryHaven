@@ -7,6 +7,7 @@ import { useRef } from 'react';
 import { Route, Routes } from 'react-router-dom';
 import Admin from './admin/Admin';
 import AdminForm from './admin/AdminForm';
+import AuthGuard from './authGuard';
 
 function App() {
   const bannerRef = useRef(null)
@@ -16,9 +17,12 @@ function App() {
   return (<>
 
     <Routes>
-      <Route path='/admin' element={<Admin />} />
-      <Route path='/admin/edit/:id' element={<AdminForm />} />
-      <Route path='/admin/create' element={<AdminForm />} />
+      <Route element={<AuthGuard />}>
+        <Route path='/admin' element={<Admin />} />
+        <Route path='/admin/edit/:id' element={<AdminForm />} />
+        <Route path='/admin/create' element={<AdminForm />} />
+      </Route>
+
       <Route path='/' element={<>
         <div className={styles.navContainer}>
           <Nav bannerRef={bannerRef} menuRef={menuRef} aboutUsRef={aboutUsRef} />
