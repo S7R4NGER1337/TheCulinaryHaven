@@ -18,6 +18,7 @@ function App() {
     <Routes>
       <Route path='/admin' element={<Admin />} />
       <Route path='/admin/edit/:id' element={<AdminForm />} />
+      <Route path='/admin/create' element={<AdminForm />} />
       <Route path='/' element={<>
         <div className={styles.navContainer}>
           <Nav bannerRef={bannerRef} menuRef={menuRef} aboutUsRef={aboutUsRef} />
