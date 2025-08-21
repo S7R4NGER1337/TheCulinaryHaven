@@ -18,13 +18,22 @@ export default function AdminForm() {
     }, [productId])
 
     async function buttonOnclick() {
-        if(page === 'edit' && validateForm()){
-            const adminToken = localStorage.getItem('token')
-            
+        const adminToken = localStorage.getItem('token')
+        if(!validateForm()) return
+        if(page === 'edit'){
             await fetch(`http://localhost:3030/products/edit/${productId}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
+                    'Authorization': adminToken
+                },
+                body: JSON.stringify(product)
+            })
+        }else{
+            await fetch('http://localhost:3030/products/create', {
+                method: 'POST',
+                headers: {
+                    'Content-type': 'application/json',
                     'Authorization': adminToken
                 },
                 body: JSON.stringify(product)
