@@ -29,11 +29,22 @@ export default function Admin() {
         </Box>
     )
 
+    async function deleteProduct(id) {
+        const adminToken = localStorage.getItem('token')
+
+        await fetch(`http://localhost:3030/products/delete/${id}`, {
+            headers: {
+                'Authorization': adminToken
+            }
+        })
+
+        setProducts(prevProducts => prevProducts.filter(product => product._id !== id))
+    }
     return (<>
         <h1 className={styles.goBack} onClick={() => navigate('/')}>Back to the app</h1>
         {loadStatus ? <Loader /> : <>
             <div className={styles.productsContainer}>
-                {products.map(product => <AdminProductCard productData={product} key={product} />)}
+                {products.map(product => <AdminProductCard productData={product} key={product} deleteProduct={deleteProduct}/>)}
             </div>
         </>}
     </>)

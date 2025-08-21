@@ -1,7 +1,7 @@
 import styles from './adminProductCard.module.css'
 import { useNavigate } from 'react-router-dom'
 
-export default function AdminProductCard({ productData }) {
+export default function AdminProductCard({ productData, deleteProduct }) {
     const navigate = useNavigate()
     return <>
         <div className={styles.productContainer}>
@@ -13,7 +13,7 @@ export default function AdminProductCard({ productData }) {
             </div>
             <div className={styles.adminButtons}>
                 <button className={`${styles.adminEdit} ${styles.adminButton}`} onClick={() => navigate(`/admin/edit/${productData._id}`)}>Edit</button>
-                <button className={`${styles.adminDelete} ${styles.adminButton}`}>Delete</button>
+                <button className={`${styles.adminDelete} ${styles.adminButton}`} onClick={() => deleteProduct(productData._id)}>Delete</button>
             </div>
         </div>
     </>
