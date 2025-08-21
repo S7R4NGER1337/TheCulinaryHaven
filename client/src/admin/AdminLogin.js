@@ -13,6 +13,7 @@ export default function AdminLogin() {
                 <label>Password</label>
                 <input className={styles.input} />
             </div>
+            <button className={styles.loginButton}>Login</button>
         </div>
     )
 }
