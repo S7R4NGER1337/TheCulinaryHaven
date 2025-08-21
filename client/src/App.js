@@ -8,6 +8,7 @@ import { Route, Routes } from 'react-router-dom';
 import Admin from './admin/Admin';
 import AdminForm from './admin/AdminForm';
 import AuthGuard from './authGuard';
+import AdminLogin from './admin/AdminLogin';
 
 function App() {
   const bannerRef = useRef(null)
@@ -22,7 +23,7 @@ function App() {
         <Route path='/admin/edit/:id' element={<AdminForm />} />
         <Route path='/admin/create' element={<AdminForm />} />
       </Route>
-
+      <Route path='/admin/login' element={<AdminLogin />} />
       <Route path='/' element={<>
         <div className={styles.navContainer}>
           <Nav bannerRef={bannerRef} menuRef={menuRef} aboutUsRef={aboutUsRef} />
