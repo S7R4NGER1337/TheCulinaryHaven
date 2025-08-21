@@ -63,6 +63,14 @@ router.get('/products/delete/:id', async (req, res) => {
     res.end()
 })
 
+router.get('/check/:token', async (req, res) => {
+    const token = req.params.token
+    const adminToken = process.env.ADMIN_AUTHTOKEN
+
+    res.send(token === adminToken)
+    res.end()
+})
+
 router.post('/products/edit/:id', async (req, res) => {
     const productId = req.params.id
     const newProductData = req.body
