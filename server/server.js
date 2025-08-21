@@ -48,6 +48,21 @@ router.post('/products/create', async (req, res) => {
     res.end()
 })
 
+router.get('/products/delete/:id', async (req, res) => {
+    const productId = req.params.id
+    const authToken = req.headers.authorization
+    const adminToken = process.env.ADMIN_AUTHTOKEN
+
+    if (authToken === adminToken) {
+        const deletedProduct = await Product.findByIdAndDelete(productId)
+        res.send(deletedProduct)
+    } else {
+        res.send('You need to be an admin')
+    }
+
+    res.end()
+})
+
 router.post('/products/edit/:id', async (req, res) => {
     const productId = req.params.id
     const newProductData = req.body
