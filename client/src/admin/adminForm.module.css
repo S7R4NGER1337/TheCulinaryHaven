@@ -1,0 +1,44 @@
+.editContainer{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.productForm{
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+    padding: 3rem 2rem;
+    border: 0.1em solid #efeefe;
+}
+
+.formInputContainer{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 20rem;
+}
+
+.formInput{
+    padding: 0.2em;
+    font-weight: 500;
+    font-size: 1rem;
+    width: 13rem;
+    border-radius: 0.2em;
+    border: 0.1em solid #e0e0e0;
+}
+
+.formButton{
+    font-size: 1rem;
+    padding: 0.5em 1em;
+    font-weight: 500;
+    background-color: white;
+    border: 0.1em solid gray;
+}
+
+.formButton:hover{
+    background-color: gray;
+    color: white;
+    cursor: pointer;
+}
