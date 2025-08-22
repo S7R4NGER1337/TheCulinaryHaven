@@ -5,10 +5,24 @@ const mongoose = require('mongoose')
 const Product = require('./models/Product')
 const cors = require('cors')
 require('dotenv').config()
+const jwt = require('jsonwebtoken');
+const cookieParser = require('cookie-parser');
+const Admin = require('./models/Admin')
 
 app.use(express.urlencoded())
 app.use(express.json())
 app.use(cors())
+app.use(cookieParser());
+
+const ACCESS_TTL = '30m';
+const REFRESH_TTL = '30d';
+
+function signAccess(payload) {
+  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: ACCESS_TTL });
+}
+function signRefresh(payload) {
+  return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: REFRESH_TTL });
+}
 
 router.get('/products', async (req, res) => {
     const allProducts = await Product.find()
