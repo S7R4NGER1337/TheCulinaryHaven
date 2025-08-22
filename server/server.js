@@ -15,14 +15,16 @@ app.use(express.json())
 app.use(cors())
 app.use(cookieParser());
 
-const ACCESS_TTL = '30m';
-const REFRESH_TTL = '30d';
+function verifyAdmin(req, res, next) {
+  const authHeader = req.headers["authorization"]
+  const token = authHeader && authHeader.split(" ")[1]
+  if (!token) return res.sendStatus(401)
 
-function signAccess(payload) {
-    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: ACCESS_TTL });
-}
-function signRefresh(payload) {
-    return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: REFRESH_TTL });
+  jwt.verify(token, process.env.ACCESS_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403)
+    req.user = user
+    next()
+  })
 }
 
 const refreshCookieOptions = {
@@ -56,7 +58,7 @@ router.get('/products/category/:category', async (req, res) => {
     res.end()
 })
 
-router.post('/products/create', async (req, res) => {
+router.post('/products/create', verifyAdmin, async (req, res) => {
     const data = req.body
     const authToken = req.headers.authorization
     const adminToken = process.env.ADMIN_AUTHTOKEN
@@ -71,7 +73,7 @@ router.post('/products/create', async (req, res) => {
     res.end()
 })
 
-router.get('/products/delete/:id', async (req, res) => {
+router.get('/products/delete/:id', verifyAdmin, async (req, res) => {
     const productId = req.params.id
     const authToken = req.headers.authorization
     const adminToken = process.env.ADMIN_AUTHTOKEN
@@ -94,7 +96,7 @@ router.get('/check/:token', async (req, res) => {
     res.end()
 })
 
-router.post('/products/edit/:id', async (req, res) => {
+router.post('/products/edit/:id', verifyAdmin, async (req, res) => {
     const productId = req.params.id
     const newProductData = req.body
     const authToken = req.headers.authorization
