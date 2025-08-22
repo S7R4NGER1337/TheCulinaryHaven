@@ -75,11 +75,11 @@ router.post('/products/edit/:id', verifyAdmin, async (req, res) => {
   res.json(editedProduct);
 });
 router.post('/admin/login', async (req, res) => {
-  const { username, password } = req.body;
+  const { username, passwordHash } = req.body;
   const user = await Admin.findOne({ username });
   if (!user) return res.status(400).json({ msg: "Invalid name or password" });
 
-  const isMatch = await bcrypt.compare(password, user.passwordHash);
+  const isMatch = await bcrypt.compare(passwordHash, user.passwordHash);
   if (!isMatch) return res.status(400).json({ msg: "Invalid name or password" });
 
   const accessToken = jwt.sign({ id: user._id }, process.env.ACCESS_SECRET, { expiresIn: "15m" });
