@@ -126,6 +126,23 @@ router.post('/admin/login', async (req, res) => {
     res.json({ accessToken })
 })
 
+app.post("/auth/refresh", (req, res) => {
+  const token = req.cookies.refreshToken
+  if (!token) return res.sendStatus(401)
+
+  jwt.verify(token, process.env.REFRESH_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403)
+
+    const accessToken = jwt.sign(
+      { id: user.id },
+      process.env.ACCESS_SECRET,
+      { expiresIn: "15m" }
+    )
+
+    res.json({ accessToken })
+  })
+})
+
 mongoose.connect('mongodb://localhost:27017/TheCulinaryHaven')
     .then(() => console.log('Db connected'))
     .catch(error => console.log(error))
