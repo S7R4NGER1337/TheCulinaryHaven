@@ -58,7 +58,7 @@ If the token is missing or invalid → the user is redirected to the **Admin Log
 - **Frontend:** React
 - **Backend:** Node.js + Express  
 - **Database:** MongoDB  
-- **Authentication:** Token-based (static token)  
+- **Authentication:** Token-based (JWT)  
 - **UI/UX:** Responsive & Mobile-first Design  
 
 ---
