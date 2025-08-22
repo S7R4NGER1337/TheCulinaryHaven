@@ -7,7 +7,7 @@ export default function AdminForm() {
     const navigate = useNavigate()
     const productId = useLocation().pathname.split('/')[3]
     const page = useLocation().pathname.split('/')[2]
-    
+
     useEffect(() => {
         async function getProductData() {
             const response = await fetch(`http://localhost:3030/products/${productId}`)
@@ -24,26 +24,43 @@ export default function AdminForm() {
         })
     }
 
+    async function createProduct() {
+        const res = await fetch('http://localhost:3030/products/create', {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify(product)
+        })
+        if (res.status === 401 || res.status === 403) {
+            await refreshAccessToken()
+            return createProduct()
+        }
+        return await res.json()
+    }
+
+    async function editProduct() {
+        const res = await fetch(`http://localhost:3030/products/edit/${productId}`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            credentials: 'include',
+            body: JSON.stringify(product)
+        })
+        if (res.status === 401 || res.status === 403) {
+            await refreshAccessToken()
+            return editProduct()
+        }
+        return await res.json()
+    }
     async function buttonOnclick() {
-        const adminToken = localStorage.getItem('token')
-        if(!validateForm()) return
-        if(page === 'edit'){
-            await fetch(`http://localhost:3030/products/edit/${productId}`, {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Authorization': adminToken
-                },
-                body: JSON.stringify(product)
-            })
-        }else{
-            const res = await fetch('http://localhost:3030/products/create', {
-                method: 'POST',
-                headers: {
-                    'Content-type': 'application/json'
-                },
-                body: JSON.stringify(product)
-            })
+        if (!validateForm()) return
+        
+        if (page === 'edit') {
+            editProduct()
+        } else {
+            createProduct()
         }
         navigate('/admin')
     }
@@ -51,18 +68,18 @@ export default function AdminForm() {
     function validateForm() {
         let noText = true
         for (const key in product) {
-            if(product[key] === ''){
+            if (product[key] === '') {
                 noText = false
             };
-        }   
-        return noText        
+        }
+        return noText
     }
 
     function inputOnChange(e) {
         const targetName = e.target.name
         const targetValue = e.target.value
 
-        setProduct({...product, [targetName]: targetValue})
+        setProduct({ ...product, [targetName]: targetValue })
     }
 
     return (
@@ -95,10 +112,10 @@ export default function AdminForm() {
 
                 <div className={styles.formInputContainer}>
                     <label>Price in $</label>
-                    <input value={product.price} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='number' autoComplete='none' name='price'/>
+                    <input value={product.price} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='number' autoComplete='none' name='price' />
                 </div>
 
-                <button className={styles.formButton} type='button' onClick={() => buttonOnclick()}>{page === 'edit' ? 'Edit Product': 'Create Product'}</button>
+                <button className={styles.formButton} type='button' onClick={() => buttonOnclick()}>{page === 'edit' ? 'Edit Product' : 'Create Product'}</button>
             </form>
         </div>
     )
