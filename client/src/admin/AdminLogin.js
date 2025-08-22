@@ -18,11 +18,11 @@ export default function AdminLogin() {
                 'Content-type': 'application/json'
             },
             credentials: 'include',
-            body: JSON.stringify({username: loginData.userName, password: loginData.password})
+            body: JSON.stringify({username: loginData.userName, passwordHash: loginData.password})
         })
 
         const authToken = await response.json()
-        if(!response.ok) throw new Error(authToken.msg)
+        if(!response.ok) console.log(authToken.msg)
         navigate('/admin')
         
     }
