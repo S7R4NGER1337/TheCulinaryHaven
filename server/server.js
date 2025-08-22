@@ -16,15 +16,15 @@ app.use(cors())
 app.use(cookieParser());
 
 function verifyAdmin(req, res, next) {
-  const authHeader = req.headers["authorization"]
-  const token = authHeader && authHeader.split(" ")[1]
-  if (!token) return res.sendStatus(401)
+    const authHeader = req.headers["authorization"]
+    const token = authHeader && authHeader.split(" ")[1]
+    if (!token) return res.sendStatus(401)
 
-  jwt.verify(token, process.env.ACCESS_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403)
-    req.user = user
-    next()
-  })
+    jwt.verify(token, process.env.ACCESS_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403)
+        req.user = user
+        next()
+    })
 }
 
 const refreshCookieOptions = {
@@ -60,55 +60,26 @@ router.get('/products/category/:category', async (req, res) => {
 
 router.post('/products/create', verifyAdmin, async (req, res) => {
     const data = req.body
-    const authToken = req.headers.authorization
-    const adminToken = process.env.ADMIN_AUTHTOKEN
-
-    if (authToken === adminToken) {
-        const createdProduct = await Product.create(data)
-        res.send(createdProduct)
-    } else {
-        res.send('You need to be an admin')
-    }
-
+    const createdProduct = await Product.create(data)
+    
+    res.send(createdProduct)
     res.end()
 })
 
 router.get('/products/delete/:id', verifyAdmin, async (req, res) => {
     const productId = req.params.id
-    const authToken = req.headers.authorization
-    const adminToken = process.env.ADMIN_AUTHTOKEN
+    const deletedProduct = await Product.findByIdAndDelete(productId)
 
-    if (authToken === adminToken) {
-        const deletedProduct = await Product.findByIdAndDelete(productId)
-        res.send(deletedProduct)
-    } else {
-        res.send('You need to be an admin')
-    }
-
-    res.end()
-})
-
-router.get('/check/:token', async (req, res) => {
-    const token = req.params.token
-    const adminToken = process.env.ADMIN_AUTHTOKEN
-
-    res.send(token === adminToken)
+    res.send(deletedProduct)
     res.end()
 })
 
 router.post('/products/edit/:id', verifyAdmin, async (req, res) => {
     const productId = req.params.id
     const newProductData = req.body
-    const authToken = req.headers.authorization
-    const adminToken = process.env.ADMIN_AUTHTOKEN
+    const editedProduct = await Product.findByIdAndUpdate(productId, newProductData, { new: true })
 
-    if (authToken === adminToken) {
-        const editedProduct = await Product.findByIdAndUpdate(productId, newProductData, { new: true })
-        res.send(editedProduct)
-    } else {
-        res.send('You need to be an admin')
-    }
-
+    res.send(editedProduct)
     res.end()
 })
 
@@ -129,20 +100,20 @@ router.post('/admin/login', async (req, res) => {
 })
 
 app.post("/auth/refresh", (req, res) => {
-  const token = req.cookies.refreshToken
-  if (!token) return res.sendStatus(401)
+    const token = req.cookies.refreshToken
+    if (!token) return res.sendStatus(401)
 
-  jwt.verify(token, process.env.REFRESH_SECRET, (err, user) => {
-    if (err) return res.sendStatus(403)
+    jwt.verify(token, process.env.REFRESH_SECRET, (err, user) => {
+        if (err) return res.sendStatus(403)
 
-    const accessToken = jwt.sign(
-      { id: user.id },
-      process.env.ACCESS_SECRET,
-      { expiresIn: "15m" }
-    )
+        const accessToken = jwt.sign(
+            { id: user.id },
+            process.env.ACCESS_SECRET,
+            { expiresIn: "15m" }
+        )
 
-    res.json({ accessToken })
-  })
+        res.json({ accessToken })
+    })
 })
 
 mongoose.connect('mongodb://localhost:27017/TheCulinaryHaven')
