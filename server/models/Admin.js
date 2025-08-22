@@ -10,4 +10,5 @@ AdminSchema.methods.validatePassword = function (password) {
   return bcrypt.compare(password, this.passwordHash);
 };
 
-module.exports = mongoose.model('Admin', AdminSchema);
+const Admin = mongoose.model('Admin', AdminSchema);
+module.exports = Admin
