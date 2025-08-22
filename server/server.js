@@ -8,6 +8,7 @@ require('dotenv').config()
 const jwt = require('jsonwebtoken');
 const cookieParser = require('cookie-parser');
 const Admin = require('./models/Admin')
+const bcrypt = require('bcrypt')
 
 app.use(express.urlencoded())
 app.use(express.json())
@@ -18,11 +19,19 @@ const ACCESS_TTL = '30m';
 const REFRESH_TTL = '30d';
 
 function signAccess(payload) {
-  return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: ACCESS_TTL });
+    return jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: ACCESS_TTL });
 }
 function signRefresh(payload) {
-  return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: REFRESH_TTL });
+    return jwt.sign(payload, process.env.JWT_REFRESH_SECRET, { expiresIn: REFRESH_TTL });
 }
+
+const refreshCookieOptions = {
+    httpOnly: true,
+    secure: process.env.NODE_ENV === "production",
+    sameSite: 'none',
+    path: '/admin/refresh',
+    maxAge: 30 * 24 * 60 * 60 * 1000
+};
 
 router.get('/products', async (req, res) => {
     const allProducts = await Product.find()
@@ -102,18 +111,19 @@ router.post('/products/edit/:id', async (req, res) => {
 })
 
 router.post('/admin/login', async (req, res) => {
-    const adminToken = process.env.ADMIN_AUTHTOKEN
-    const adminPassword = process.env.ADMIN_PASSWORD
-    const adminUsername = process.env.ADMIN_USERNAME
-    const data = req.body
+    const { username, passwordHash } = req.body
+    const user = await Admin.findOne({ username })
 
-    if (data.userName === adminUsername && data.password === adminPassword) {
-        res.send({adminToken: adminToken})
-    } else {
-        res.send({adminToken: 'no'})
-    }
+    if (!user) return res.status(400).json({ msg: "Невалиден имейл" })
 
-    res.end()
+    const isMatch = await bcrypt.compare(passwordHash, user.passwordHash)
+    if (!isMatch) return res.status(400).json({ msg: "Грешна парола" })
+
+    const accessToken = jwt.sign({ id: user._id }, process.env.ACCESS_SECRET, { expiresIn: "15m" })
+    const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_SECRET, { expiresIn: "7d" })
+
+    res.cookie("refreshToken", refreshToken, refreshCookieOptions)
+    res.json({ accessToken })
 })
 
 mongoose.connect('mongodb://localhost:27017/TheCulinaryHaven')
