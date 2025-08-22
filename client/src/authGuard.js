@@ -7,30 +7,28 @@ export default function AuthGuard() {
 
     useEffect(() => {
         async function checkIfAdmin() {
-            const token = localStorage.getItem('token')
-            if (!token) {
-                setAdminStatus(false)
-                setLoading(false)
-                return
-            }
-
             try {
-                const response = await fetch(`http://localhost:3030/check/${token}`)
-                const isTokenValid = await response.json()
-                setAdminStatus(isTokenValid)
+                const response = await fetch("http://localhost:3030/admin/check", {
+                    method: "GET",
+                    credentials: "include"
+                });
+
+                if (response.status === 200) {
+                    setAdminStatus(true);
+                } else {
+                    setAdminStatus(false);
+                }
             } catch (err) {
-                setAdminStatus(false)
+                setAdminStatus(false);
             } finally {
-                setLoading(false)
+                setLoading(false);
             }
         }
 
-        checkIfAdmin()
-    }, [])
+        checkIfAdmin();
+    }, []);
 
-    if (loading) {
-        return <h2>Loading...</h2>
-    }
+    if (loading) return <h2>Loading...</h2>
 
     return adminStatus ? <Outlet /> : <Navigate to="/admin/login" />
 }
