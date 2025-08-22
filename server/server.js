@@ -58,62 +58,51 @@ router.get('/products/category/:category', async (req, res) => {
 })
 
 router.post('/products/create', verifyAdmin, async (req, res) => {
-    const data = req.body
-    const createdProduct = await Product.create(data)
+  const createdProduct = await Product.create(req.body);
 
-    res.send(createdProduct)
-    res.end()
-})
+  res.json(createdProduct);
+});
 
 router.get('/products/delete/:id', verifyAdmin, async (req, res) => {
-    const productId = req.params.id
-    const deletedProduct = await Product.findByIdAndDelete(productId)
+  const deletedProduct = await Product.findByIdAndDelete(req.params.id);
 
-    res.send(deletedProduct)
-    res.end()
-})
+  res.json(deletedProduct);
+});
 
 router.post('/products/edit/:id', verifyAdmin, async (req, res) => {
-    const productId = req.params.id
-    const newProductData = req.body
-    const editedProduct = await Product.findByIdAndUpdate(productId, newProductData, { new: true })
+  const editedProduct = await Product.findByIdAndUpdate(req.params.id, req.body, { new: true });
 
-    res.send(editedProduct)
-    res.end()
-})
-
+  res.json(editedProduct);
+});
 router.post('/admin/login', async (req, res) => {
-    const { username, passwordHash } = req.body
-    const user = await Admin.findOne({ username })
+  const { username, password } = req.body;
+  const user = await Admin.findOne({ username });
+  if (!user) return res.status(400).json({ msg: "Invalid name or password" });
 
-    if (!user) return res.status(400).json({ msg: "Невалиден имейл" })
+  const isMatch = await bcrypt.compare(password, user.passwordHash);
+  if (!isMatch) return res.status(400).json({ msg: "Invalid name or password" });
 
-    const isMatch = await bcrypt.compare(passwordHash, user.passwordHash)
-    if (!isMatch) return res.status(400).json({ msg: "Грешна парола" })
+  const accessToken = jwt.sign({ id: user._id }, process.env.ACCESS_SECRET, { expiresIn: "15m" });
+  const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_SECRET, { expiresIn: "7d" });
 
-    const accessToken = jwt.sign({ id: user._id }, process.env.ACCESS_SECRET, { expiresIn: "15m" })
-    const refreshToken = jwt.sign({ id: user._id }, process.env.REFRESH_SECRET, { expiresIn: "7d" })
+  res.cookie("accessToken", accessToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 15*60*1000 });
+  res.cookie("refreshToken", refreshToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 7*24*60*60*1000, path: '/auth/refresh' });
+  res.json({ msg: "Logged in" });
+});
 
-    res.cookie("refreshToken", refreshToken, refreshCookieOptions)
-    res.json({ accessToken })
-})
 
 app.post("/auth/refresh", (req, res) => {
-    const token = req.cookies.refreshToken
-    if (!token) return res.sendStatus(401)
+  const token = req.cookies.refreshToken;
+  if (!token) return res.sendStatus(401);
 
-    jwt.verify(token, process.env.REFRESH_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403)
+  jwt.verify(token, process.env.REFRESH_SECRET, (err, user) => {
+    if (err) return res.sendStatus(403);
 
-        const accessToken = jwt.sign(
-            { id: user.id },
-            process.env.ACCESS_SECRET,
-            { expiresIn: "15m" }
-        )
-
-        res.json({ accessToken })
-    })
-})
+    const accessToken = jwt.sign({ id: user.id }, process.env.ACCESS_SECRET, { expiresIn: "15m" });
+    res.cookie("accessToken", accessToken, { httpOnly: true, secure: false, sameSite: 'lax', maxAge: 15*60*1000 });
+    res.json({ msg: 'Access token refreshed' });
+  });
+});
 
 mongoose.connect('mongodb://localhost:27017/TheCulinaryHaven')
     .then(() => console.log('Db connected'))
