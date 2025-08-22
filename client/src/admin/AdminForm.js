@@ -17,6 +17,13 @@ export default function AdminForm() {
         getProductData()
     }, [productId])
 
+    async function refreshAccessToken() {
+        await fetch('http://localhost:3030/auth/refresh', {
+            method: 'POST',
+            credentials: 'include'
+        })
+    }
+
     async function buttonOnclick() {
         const adminToken = localStorage.getItem('token')
         if(!validateForm()) return
@@ -30,11 +37,10 @@ export default function AdminForm() {
                 body: JSON.stringify(product)
             })
         }else{
-            await fetch('http://localhost:3030/products/create', {
+            const res = await fetch('http://localhost:3030/products/create', {
                 method: 'POST',
                 headers: {
-                    'Content-type': 'application/json',
-                    'Authorization': adminToken
+                    'Content-type': 'application/json'
                 },
                 body: JSON.stringify(product)
             })
