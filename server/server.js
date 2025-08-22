@@ -104,6 +104,10 @@ app.post("/auth/refresh", (req, res) => {
   });
 });
 
+router.get('/admin/check', verifyAdmin, (req, res) => {
+  res.sendStatus(200);
+});
+
 mongoose.connect('mongodb://localhost:27017/TheCulinaryHaven')
     .then(() => console.log('Db connected'))
     .catch(error => console.log(error))
