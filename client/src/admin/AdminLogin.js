@@ -17,14 +17,13 @@ export default function AdminLogin() {
             headers: {
                 'Content-type': 'application/json'
             },
-            body: JSON.stringify(loginData)
+            credentials: 'include',
+            body: JSON.stringify({username: loginData.userName, password: loginData.password})
         })
 
         const authToken = await response.json()
-        if(authToken !== ''){
-            localStorage.setItem('token', authToken.adminToken)
-            navigate('/admin')
-        }
+        if(!response.ok) throw new Error(authToken.msg)
+        navigate('/admin')
         
     }
     return (
