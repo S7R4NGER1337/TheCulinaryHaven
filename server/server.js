@@ -16,15 +16,14 @@ app.use(cors())
 app.use(cookieParser());
 
 function verifyAdmin(req, res, next) {
-    const authHeader = req.headers["authorization"]
-    const token = authHeader && authHeader.split(" ")[1]
-    if (!token) return res.sendStatus(401)
+    const token = req.cookies.accessToken;
+    if (!token) return res.sendStatus(401);
 
     jwt.verify(token, process.env.ACCESS_SECRET, (err, user) => {
-        if (err) return res.sendStatus(403)
-        req.user = user
-        next()
-    })
+        if (err) return res.sendStatus(403);
+        req.user = user;
+        next();
+    });
 }
 
 const refreshCookieOptions = {
@@ -61,7 +60,7 @@ router.get('/products/category/:category', async (req, res) => {
 router.post('/products/create', verifyAdmin, async (req, res) => {
     const data = req.body
     const createdProduct = await Product.create(data)
-    
+
     res.send(createdProduct)
     res.end()
 })
