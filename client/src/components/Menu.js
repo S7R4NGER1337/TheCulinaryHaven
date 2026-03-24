@@ -3,24 +3,25 @@ import MenuCatagoryElement from "./MenuCategoryElement"
 import styles from './menu.module.css'
 import ProductCard from "./ProductCard"
 
+const API_URL = process.env.REACT_APP_API_URL
+
 export default function Menu() {
 
     const [selectedCategory, setSelectedCategory] = useState('Appetizers')
     const [products, setProducts] = useState([])
 
     useEffect(() => {
-        try {
-            async function getProducts() {
-
-                const response = await fetch(`http://localhost:3030/products/category/${selectedCategory}`)
+        async function getProducts() {
+            try {
+                const response = await fetch(`${API_URL}/products/category/${selectedCategory}`)
+                if (!response.ok) return
                 const products = await response.json()
-
                 setProducts(products);
+            } catch (error) {
+                setProducts([])
             }
-            getProducts()
-        } catch (error) {
-            console.log(error);
         }
+        getProducts()
     }, [selectedCategory])
 
     const categories = [
@@ -42,7 +43,7 @@ export default function Menu() {
         <h1 className={styles.selectedCategoryName}>{selectedCategory}</h1>
         <div className={styles.productsContainer}>
             {products.map(((product) => (
-                <ProductCard key={product.id} productData={product} />
+                <ProductCard key={product._id} productData={product} />
             )))}
         </div>
     </div>

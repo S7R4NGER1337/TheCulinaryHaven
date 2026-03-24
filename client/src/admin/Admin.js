@@ -5,18 +5,34 @@ import AdminProductCard from "./AdminProductCard"
 import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 
+const API_URL = process.env.REACT_APP_API_URL
+
 export default function Admin() {
     const [products, setProducts] = useState([])
     const [loadStatus, setLoadStatus] = useState(true)
     const navigate = useNavigate()
 
+    async function logout() {
+        try {
+            await fetch(`${API_URL}/auth/logout`, { method: 'POST', credentials: 'include' })
+        } catch (err) {
+            // proceed with redirect regardless
+        }
+        navigate('/admin/login')
+    }
+
     useEffect(() => {
         async function getAllProducts() {
-            const response = await fetch('http://localhost:3030/products')
-            const products = await response.json()
-
-            setProducts(products)
-            setLoadStatus(false)
+            try {
+                const response = await fetch(`${API_URL}/products`)
+                if (!response.ok) throw new Error('Failed to fetch products')
+                const products = await response.json()
+                setProducts(products)
+            } catch (err) {
+                setProducts([])
+            } finally {
+                setLoadStatus(false)
+            }
         }
         getAllProducts()
     }, [])
@@ -30,24 +46,25 @@ export default function Admin() {
     )
 
     async function deleteProduct(id) {
-        const adminToken = localStorage.getItem('token')
-
-        await fetch(`http://localhost:3030/products/delete/${id}`, {
-            headers: {
-                'Authorization': adminToken
-            }
-        })
-
-        setProducts(prevProducts => prevProducts.filter(product => product._id !== id))
+        try {
+            await fetch(`${API_URL}/products/${id}`, {
+                method: 'DELETE',
+                credentials: 'include'
+            })
+            setProducts(prevProducts => prevProducts.filter(product => product._id !== id))
+        } catch (err) {
+            // deletion failed silently - product list unchanged
+        }
     }
     return (<>
         <div className={styles.adminLinks}>
             <h1 className={styles.goBack} onClick={() => navigate('/')}>Back to the app</h1>
             <h1 className={styles.goBack} onClick={() => navigate('/admin/create')}>Create new product</h1>
+            <h1 className={styles.goBack} onClick={logout}>Logout</h1>
         </div>
         {loadStatus ? <Loader /> : <>
             <div className={styles.productsContainer}>
-                {products.map(product => <AdminProductCard productData={product} key={product} deleteProduct={deleteProduct} />)}
+                {products.map(product => <AdminProductCard productData={product} key={product._id} deleteProduct={deleteProduct} />)}
             </div>
         </>}
     </>)

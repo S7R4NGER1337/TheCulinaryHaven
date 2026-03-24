@@ -31,7 +31,29 @@
 }
 
 @media only screen and (max-width: 700px) {
-    .googleMap{
+    .googleMap {
         display: none;
+    }
+
+    .aboutUsContainer {
+        flex-direction: column;
+        gap: 1.5rem;
+        padding: 0 0.5rem;
+    }
+
+    .aboutUsContainer h1 {
+        font-size: 1.2rem;
+    }
+
+    .aboutUsContainer p {
+        font-size: 0.9rem;
+    }
+
+    .workingHours h1 {
+        padding-bottom: 1rem;
+    }
+
+    .restaurantLocation {
+        margin-bottom: 1rem;
     }
 }

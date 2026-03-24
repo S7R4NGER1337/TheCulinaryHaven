@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react"
 import { Outlet, Navigate } from "react-router-dom"
 
+const API_URL = process.env.REACT_APP_API_URL
+
 export default function AuthGuard() {
     const [adminStatus, setAdminStatus] = useState(null)
     const [loading, setLoading] = useState(true)
@@ -8,7 +10,7 @@ export default function AuthGuard() {
     useEffect(() => {
         async function checkIfAdmin() {
             try {
-                const response = await fetch("http://localhost:3030/admin/check", {
+                const response = await fetch(`${API_URL}/admin/check`, {
                     method: "GET",
                     credentials: "include"
                 });

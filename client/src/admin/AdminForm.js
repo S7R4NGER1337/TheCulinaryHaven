@@ -2,45 +2,59 @@ import { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import styles from './adminForm.module.css'
 
+const API_URL = process.env.REACT_APP_API_URL
+
 export default function AdminForm() {
-    const [product, setProduct] = useState([])
+    const [product, setProduct] = useState({})
     const navigate = useNavigate()
     const productId = useLocation().pathname.split('/')[3]
     const page = useLocation().pathname.split('/')[2]
 
     useEffect(() => {
         async function getProductData() {
-            const response = await fetch(`http://localhost:3030/products/${productId}`)
-            const productData = await response.json()
-            setProduct(productData)
+            try {
+                const response = await fetch(`${API_URL}/products/${productId}`)
+                if (!response.ok) return
+                const productData = await response.json()
+                setProduct(productData)
+            } catch (err) {
+                // fetch failed, form stays empty
+            }
         }
         getProductData()
     }, [productId])
 
     async function refreshAccessToken() {
-        await fetch('http://localhost:3030/auth/refresh', {
-            method: 'POST',
-            credentials: 'include'
-        })
+        try {
+            const res = await fetch(`${API_URL}/auth/refresh`, {
+                method: 'POST',
+                credentials: 'include'
+            })
+            return res.ok
+        } catch (err) {
+            return false
+        }
     }
 
-    async function createProduct() {
-        const res = await fetch('http://localhost:3030/products/create', {
+    async function createProduct(retryCount = 0) {
+        const res = await fetch(`${API_URL}/products/create`, {
             method: 'POST',
             headers: {
                 'Content-type': 'application/json'
             },
+            credentials: 'include',
             body: JSON.stringify(product)
         })
-        if (res.status === 401 || res.status === 403) {
-            await refreshAccessToken()
-            return createProduct()
+        if ((res.status === 401 || res.status === 403) && retryCount === 0) {
+            const refreshed = await refreshAccessToken()
+            if (!refreshed) return null
+            return createProduct(1)
         }
         return await res.json()
     }
 
-    async function editProduct() {
-        const res = await fetch(`http://localhost:3030/products/edit/${productId}`, {
+    async function editProduct(retryCount = 0) {
+        const res = await fetch(`${API_URL}/products/edit/${productId}`, {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
@@ -48,31 +62,37 @@ export default function AdminForm() {
             credentials: 'include',
             body: JSON.stringify(product)
         })
-        if (res.status === 401 || res.status === 403) {
-            await refreshAccessToken()
-            return editProduct()
+        if ((res.status === 401 || res.status === 403) && retryCount === 0) {
+            const refreshed = await refreshAccessToken()
+            if (!refreshed) return null
+            return editProduct(1)
         }
         return await res.json()
     }
+
     async function buttonOnclick() {
         if (!validateForm()) return
-        
-        if (page === 'edit') {
-            editProduct()
-        } else {
-            createProduct()
+
+        try {
+            if (page === 'edit') {
+                await editProduct()
+            } else {
+                await createProduct()
+            }
+            navigate('/admin')
+        } catch (err) {
+            // request failed, stay on page
         }
-        navigate('/admin')
     }
 
     function validateForm() {
-        let noText = true
-        for (const key in product) {
-            if (product[key] === '') {
-                noText = false
-            };
-        }
-        return noText
+        const { name, description, image, category, price } = product
+        if (!name || name.trim() === '') return false
+        if (!description || description.trim() === '') return false
+        if (!image || image.trim() === '') return false
+        if (!category) return false
+        if (price === undefined || price === null || price === '') return false
+        return true
     }
 
     function inputOnChange(e) {

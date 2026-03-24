@@ -52,17 +52,26 @@
 }
 
 @media only screen and (max-width: 700px) {
-    .bannerName{
+    .bannerContainer {
+        max-width: 100%;
+        border-radius: 0.5em;
+    }
+
+    .bannerName {
         font-size: 1.4rem;
     }
 
-    .bannerButton{
+    .bannerButton {
         margin: 0;
         padding: 0.5rem 1rem;
-        font-size: 1rem;
+        font-size: 0.9rem;
     }
 
-    .bannerDescription{
-        font-size: 0.9rem;
+    .bannerDescription {
+        font-size: 0.85rem;
+    }
+
+    .bannerInfo {
+        gap: 0.5rem;
     }
 }

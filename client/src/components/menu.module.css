@@ -6,6 +6,7 @@
 .menuContainer{
     display: flex;
     flex-direction: column;
+    width: 60rem;
 }
 
 .menuHeading{
@@ -18,8 +19,29 @@
     justify-content: center;
     flex-direction: column;
     gap: 2rem;
+    min-height: 70vh;
 }
 
 .selectedCategoryName{
     margin-bottom: 2rem;
+}
+
+@media only screen and (max-width: 700px) {
+    .menuContainer {
+        width: 100%;
+    }
+
+    .menuHeading {
+        font-size: 1.1rem;
+    }
+
+    .selectedCategoryName {
+        font-size: 1.3rem;
+        margin-bottom: 1rem;
+    }
+
+    .productsContainer {
+        gap: 1rem;
+        min-height: 50vh;
+    }
 }
