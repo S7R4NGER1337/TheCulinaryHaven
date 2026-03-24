@@ -19,13 +19,15 @@ if (missingEnvVars.length > 0) {
     process.exit(1);
 }
 
-app.use(helmet())
-app.use(express.urlencoded({ extended: false, limit: '10kb' }))
-app.use(express.json({ limit: '10kb' }))
 app.use(cors({
   origin: process.env.CLIENT_ORIGIN || 'http://localhost:3000',
   credentials: true
 }));
+app.use(helmet({
+    crossOriginResourcePolicy: { policy: 'cross-origin' }
+}))
+app.use(express.urlencoded({ extended: false, limit: '10kb' }))
+app.use(express.json({ limit: '10kb' }))
 app.use(cookieParser());
 
 const isProduction = process.env.NODE_ENV === 'production';
