@@ -12,7 +12,7 @@ const bcrypt = require('bcrypt')
 const helmet = require('helmet')
 
 // Validate required environment variables at startup
-const requiredEnvVars = ['ACCESS_SECRET', 'REFRESH_SECRET', 'MONGO_URI'];
+const requiredEnvVars = ['ACCESS_SECRET', 'REFRESH_SECRET', 'MONGODB_URI'];
 const missingEnvVars = requiredEnvVars.filter(v => !process.env[v]);
 if (missingEnvVars.length > 0) {
     console.error(`Missing required environment variables: ${missingEnvVars.join(', ')}`);
@@ -228,8 +228,8 @@ app.use((err, req, res, next) => {
     res.status(500).json({ msg: 'Internal server error' });
 });
 
-const MONGO_URI = process.env.MONGO_URI;
-mongoose.connect(MONGO_URI)
+const MONGODB_URI = process.env.MONGODB_URI;
+mongoose.connect(MONGODB_URI)
     .then(() => {
         console.log('DB connected');
         const PORT = process.env.PORT || 3030;

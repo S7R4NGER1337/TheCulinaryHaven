@@ -12,8 +12,8 @@ async function run() {
     process.exit(1);
   }
 
-  const MONGO_URI = process.env.MONGO_URI || 'mongodb://localhost:27017/TheCulinaryHaven';
-  await mongoose.connect(MONGO_URI);
+  const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/TheCulinaryHaven';
+  await mongoose.connect(MONGODB_URI);
 
   const exists = await Admin.findOne({ username });
   if (exists) {
