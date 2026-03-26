@@ -2,7 +2,7 @@ import { useState } from 'react'
 import styles from './adminLogin.module.css'
 import { useNavigate } from 'react-router-dom'
 
-const API_URL = process.env.REACT_APP_API_URL
+import API_URL from '../api'
 
 export default function AdminLogin() {
     const [loginData, setLoginData] = useState({

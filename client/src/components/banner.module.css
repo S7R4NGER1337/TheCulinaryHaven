@@ -12,6 +12,17 @@
     border-radius: 1em;
 }
 
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(24px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
 .bannerInfo{
     position: absolute;
     top: 50%;
@@ -34,15 +45,19 @@
     border: none;
     color: white;
     background-color: #EB2933;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    animation: fadeInUp 0.7s ease 0.4s both;
 }
 
 .bannerName{
     font-size: 3.2rem;
     font-weight: 800;
+    animation: fadeInUp 0.6s ease both;
 }
 
 .bannerDescription{
     font-size: 1.1rem;
+    animation: fadeInUp 0.6s ease 0.2s both;
 }
 
 .bannerButton:hover{

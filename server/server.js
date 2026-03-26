@@ -47,25 +47,36 @@ const refreshCookieOptions = {
     maxAge: 7 * 24 * 60 * 60 * 1000
 };
 
-// Simple in-memory rate limiter for login endpoint
-const loginAttempts = new Map();
-function loginRateLimiter(req, res, next) {
-    const ip = req.ip;
-    const now = Date.now();
-    const windowMs = 15 * 60 * 1000;
-    const maxAttempts = 10;
-
-    const entry = loginAttempts.get(ip);
-    if (!entry || now > entry.resetAt) {
-        loginAttempts.set(ip, { count: 1, resetAt: now + windowMs });
-        return next();
-    }
-    if (entry.count >= maxAttempts) {
-        return res.status(429).json({ msg: 'Too many login attempts. Please try again later.' });
-    }
-    entry.count++;
-    next();
+// Generic in-memory rate limiter factory
+function createRateLimiter(windowMs, maxAttempts, message) {
+    const attempts = new Map();
+    return function (req, res, next) {
+        const ip = req.ip;
+        const now = Date.now();
+        const entry = attempts.get(ip);
+        if (!entry || now > entry.resetAt) {
+            attempts.set(ip, { count: 1, resetAt: now + windowMs });
+            return next();
+        }
+        if (entry.count >= maxAttempts) {
+            return res.status(429).json({ msg: message });
+        }
+        entry.count++;
+        next();
+    };
 }
+
+const loginRateLimiter = createRateLimiter(
+    15 * 60 * 1000,
+    10,
+    'Too many login attempts. Please try again later.'
+);
+
+const writeRateLimiter = createRateLimiter(
+    60 * 1000,
+    30,
+    'Too many requests. Please slow down.'
+);
 
 function verifyAdmin(req, res, next) {
     const token = req.cookies.accessToken;
@@ -84,11 +95,21 @@ function isValidObjectId(id) {
 
 const ALLOWED_CATEGORIES = ['Appetizers', 'MainCourses', 'Desserts', 'Drinks'];
 
+function isValidImageUrl(url) {
+    try {
+        const parsed = new URL(url);
+        return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+    } catch {
+        return false;
+    }
+}
+
 function validateProduct(body) {
     const { name, description, image, category, price } = body;
     if (!name || typeof name !== 'string' || name.trim() === '') return 'Name is required';
     if (!description || typeof description !== 'string' || description.trim() === '') return 'Description is required';
     if (!image || typeof image !== 'string' || image.trim() === '') return 'Image is required';
+    if (!isValidImageUrl(image)) return 'Image must be a valid http/https URL';
     if (!category || !ALLOWED_CATEGORIES.includes(category)) return 'Invalid category';
     if (price === undefined || price === null || isNaN(Number(price)) || Number(price) < 0) return 'Price must be a non-negative number';
     return null;
@@ -134,7 +155,7 @@ router.get('/products/:id', async (req, res, next) => {
     }
 })
 
-router.post('/products/create', verifyAdmin, async (req, res, next) => {
+router.post('/products/create', verifyAdmin, writeRateLimiter, async (req, res, next) => {
     try {
         const validationError = validateProduct(req.body);
         if (validationError) return res.status(400).json({ msg: validationError });
@@ -147,7 +168,7 @@ router.post('/products/create', verifyAdmin, async (req, res, next) => {
     }
 });
 
-router.delete('/products/:id', verifyAdmin, async (req, res, next) => {
+router.delete('/products/:id', verifyAdmin, writeRateLimiter, async (req, res, next) => {
     try {
         if (!isValidObjectId(req.params.id)) return res.status(400).json({ msg: 'Invalid product ID' });
         const deletedProduct = await Product.findByIdAndDelete(req.params.id);
@@ -158,7 +179,7 @@ router.delete('/products/:id', verifyAdmin, async (req, res, next) => {
     }
 });
 
-router.post('/products/edit/:id', verifyAdmin, async (req, res, next) => {
+router.post('/products/edit/:id', verifyAdmin, writeRateLimiter, async (req, res, next) => {
     try {
         if (!isValidObjectId(req.params.id)) return res.status(400).json({ msg: 'Invalid product ID' });
 

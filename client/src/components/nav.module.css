@@ -14,14 +14,55 @@
 
 .navHeading {
     font-size: 1.2rem;
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-weight: inherit;
+    padding: 0;
+}
+
+/* Reset button styles for nav links */
+.navLink {
+    background: none;
+    border: none;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    padding: 0;
+}
+
+.navLink {
+    position: relative;
+    transition: color 0.2s ease;
+}
+
+.navLink::after {
+    content: '';
+    position: absolute;
+    bottom: -3px;
+    left: 0;
+    width: 0%;
+    height: 2px;
+    background-color: #EB2933;
+    transition: width 0.25s ease;
 }
 
 .navLink:hover {
     cursor: pointer;
+    color: #EB2933;
+}
+
+.navLink:hover::after {
+    width: 100%;
+}
+
+.navHeading {
+    transition: color 0.2s ease;
 }
 
 .navHeading:hover {
     cursor: pointer;
+    color: #EB2933;
 }
 
 .mobileNav {

@@ -5,7 +5,7 @@ import AdminProductCard from "./AdminProductCard"
 import Skeleton from '@mui/material/Skeleton';
 import Box from '@mui/material/Box';
 
-const API_URL = process.env.REACT_APP_API_URL
+import API_URL from '../api'
 
 export default function Admin() {
     const [products, setProducts] = useState([])

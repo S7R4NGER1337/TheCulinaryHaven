@@ -1,16 +1,17 @@
 import { useEffect, useState } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useParams, useNavigate } from 'react-router-dom'
 import styles from './adminForm.module.css'
-
-const API_URL = process.env.REACT_APP_API_URL
+import API_URL from '../api'
 
 export default function AdminForm() {
     const [product, setProduct] = useState({})
+    const [isSubmitting, setIsSubmitting] = useState(false)
     const navigate = useNavigate()
-    const productId = useLocation().pathname.split('/')[3]
-    const page = useLocation().pathname.split('/')[2]
+    const { id: productId } = useParams()
+    const page = productId ? 'edit' : 'create'
 
     useEffect(() => {
+        if (!productId) return
         async function getProductData() {
             try {
                 const response = await fetch(`${API_URL}/products/${productId}`)
@@ -71,8 +72,9 @@ export default function AdminForm() {
     }
 
     async function buttonOnclick() {
-        if (!validateForm()) return
+        if (!validateForm() || isSubmitting) return
 
+        setIsSubmitting(true)
         try {
             if (page === 'edit') {
                 await editProduct()
@@ -82,6 +84,8 @@ export default function AdminForm() {
             navigate('/admin')
         } catch (err) {
             // request failed, stay on page
+        } finally {
+            setIsSubmitting(false)
         }
     }
 
@@ -106,23 +110,23 @@ export default function AdminForm() {
         <div className={styles.editContainer}>
             <form className={styles.productForm}>
                 <div className={styles.formInputContainer}>
-                    <label for='name'>Name</label>
-                    <textarea value={product.name} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='text' name='name' autoComplete='none' />
+                    <label htmlFor='name'>Name</label>
+                    <textarea id='name' value={product.name} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='text' name='name' autoComplete='none' />
                 </div>
 
                 <div className={styles.formInputContainer}>
-                    <label>Description</label>
-                    <textarea value={product.description} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='text' name='description' autoComplete='none' />
+                    <label htmlFor='description'>Description</label>
+                    <textarea id='description' value={product.description} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='text' name='description' autoComplete='none' />
                 </div>
 
                 <div className={styles.formInputContainer}>
-                    <label>Image</label>
-                    <textarea value={product.image} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='text' name='image' autoComplete='none' />
+                    <label htmlFor='image'>Image URL</label>
+                    <textarea id='image' value={product.image} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='text' name='image' autoComplete='none' />
                 </div>
 
                 <div className={styles.formInputContainer}>
-                    <label>Catagory</label>
-                    <select value={product.category} onChange={(e) => inputOnChange(e)} className={styles.formInput} name="category">
+                    <label htmlFor='category'>Category</label>
+                    <select id='category' value={product.category} onChange={(e) => inputOnChange(e)} className={styles.formInput} name="category">
                         <option value="Appetizers">Appetizers</option>
                         <option value="MainCourses">MainCourses</option>
                         <option value="Desserts">Desserts</option>
@@ -131,11 +135,18 @@ export default function AdminForm() {
                 </div>
 
                 <div className={styles.formInputContainer}>
-                    <label>Price in $</label>
-                    <input value={product.price} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='number' autoComplete='none' name='price' />
+                    <label htmlFor='price'>Price in $</label>
+                    <input id='price' value={product.price} onChange={(e) => inputOnChange(e)} className={styles.formInput} type='number' autoComplete='none' name='price' />
                 </div>
 
-                <button className={styles.formButton} type='button' onClick={() => buttonOnclick()}>{page === 'edit' ? 'Edit Product' : 'Create Product'}</button>
+                <button
+                    className={styles.formButton}
+                    type='button'
+                    onClick={() => buttonOnclick()}
+                    disabled={isSubmitting}
+                >
+                    {isSubmitting ? 'Saving...' : page === 'edit' ? 'Edit Product' : 'Create Product'}
+                </button>
             </form>
         </div>
     )
